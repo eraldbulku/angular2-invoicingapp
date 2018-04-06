@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { USERS } from './user/mock-users';
+import { USERS } from '../user/mock-users';
 
 @Injectable()
 export class AuthenticationService {
@@ -21,7 +21,6 @@ export class AuthenticationService {
       return true;
     }
     return false;
- 
   }
  
    checkCredentials(){
