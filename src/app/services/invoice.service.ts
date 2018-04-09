@@ -23,4 +23,16 @@ export class InvoiceService extends InitInvoices {
     localStorage.setItem('invoices', JSON.stringify(invoices));
   }
 
+  deleteInvoice(invoiceId){
+    var invoices = JSON.parse(localStorage.getItem('invoices'));
+
+    for (var i = 0; i < invoices.length; i++) {
+      if(invoices[i].id == invoiceId) {
+        invoices.splice(i, 1);
+      }
+    }
+    // Set New Todos
+    localStorage.setItem('invoices', JSON.stringify(invoices));
+  }
+
 }

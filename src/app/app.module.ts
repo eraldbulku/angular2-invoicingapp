@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AuthenticationService } from './services/authentication.service';
 import { InvoiceService } from './services/invoice.service';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { InvoiceService } from './services/invoice.service';
     LoginComponent,
     InvoiceComponent,
     PageNotFoundComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
