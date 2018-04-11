@@ -8,6 +8,8 @@
         <button class="btn btn-default" type="submit" (click)="addInvoice(null)">Add Invoice</button>
       </span>
     </div><br />
+    <input #searchBox id="search-box" class="form-control" placeholder="Search..." (keyup)="search(searchBox.value)" /><br />
+    <div *ngIf="searchResultText" class="alert alert-warning" role="alert">{{searchResultText}}</div>
     <ul class="list-group invoice-list">
       <li *ngFor="let invoice of invoices" class="list-group-item">
         <span class="badge" style="float: none">{{invoice.id}}</span>

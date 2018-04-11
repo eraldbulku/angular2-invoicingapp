@@ -3,6 +3,10 @@ import { AuthenticationService } from '../services/authentication.service';
 import { InvoiceService } from '../services/invoice.service';
 import { Invoice } from './invoice';
 
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+
+
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
@@ -13,6 +17,7 @@ export class InvoiceComponent implements OnInit {
   invoices: Invoice[];
   text;
   errorText;
+  searchResultText;
 
   constructor(
      private _authService: AuthenticationService,
@@ -21,7 +26,9 @@ export class InvoiceComponent implements OnInit {
 
   ngOnInit(){
     this._authService.checkCredentials();
-    this.invoices = this._invoiceService.getInvoices();
+
+    this._invoiceService.getInvoicesHttp()
+      .subscribe(resInvoiceData => this.invoices = resInvoiceData);
   }
 
   /* Add or copy invoice */
@@ -29,17 +36,14 @@ export class InvoiceComponent implements OnInit {
     if(invoiceText) {
       this.text = invoiceText;
     } else if(!this.text) {
-      this.errorText = 'Ivoice text cannot be empty';
+      this.errorText = 'Invoice text cannot be empty';
       return;
     }
     var lastId = 0;
     if(this.invoices.length) {
       lastId = this.invoices[this.invoices.length - 1].id;
     }
-    var newInvoice = {
-      id: ++lastId,
-      text: this.text
-    }
+    var newInvoice = {id: ++lastId, text: this.text};
     this.invoices.push(newInvoice);
     this._invoiceService.addInvoice(newInvoice);
     this.text = this.errorText = null;
@@ -53,5 +57,16 @@ export class InvoiceComponent implements OnInit {
       }
     }
     this._invoiceService.deleteInvoice(invoiceId);
+  }
+
+  /* Search invoice */
+  search(term: string): void {
+    this._invoiceService.searchInvoices(term)
+                        .debounceTime(300)
+                        .distinctUntilChanged()
+                        .subscribe(resInvoiceData => {
+                          this.invoices = resInvoiceData;
+                          this.searchResultText = !this.invoices.length ? 'No results' : null;
+                        });
   }
 }
